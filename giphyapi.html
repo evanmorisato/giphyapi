@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Stop: It's Giphy time</title>
+</head>
+
+<body>
+
+  <div id="buttonDiv"></div>
+
+  <form id="search-form">
+    <label for="search-input">Search Here</label>
+    <input type="text" id="search-input"><br>
+    <input type="submit" value="Submit">
+  </form>
+
+  <div id="gifs-appear-here"></div>
+  <img src="https://media1.giphy.com/media/3o85xkQpyMlnBkpB9C/200_s.gif"
+    data-still="https://media1.giphy.com/media/3o85xkQpyMlnBkpB9C/200_s.gif"
+    data-animate="https://media1.giphy.com/media/3o85xkQpyMlnBkpB9C/200.gif" data-state="still" class="gif">
+  <img src="https://media2.giphy.com/media/8rFQp4kHXJ0gU/200_s.gif"
+    data-still="https://media2.giphy.com/media/8rFQp4kHXJ0gU/200_s.gif"
+    data-animate="https://media2.giphy.com/media/8rFQp4kHXJ0gU/200.gif" data-state="still" class="gif">
+  <img src="https://media3.giphy.com/media/W6LbnBigDe4ZG/200_s.gif"
+    data-still="https://media3.giphy.com/media/W6LbnBigDe4ZG/200_s.gif"
+    data-animate="https://media3.giphy.com/media/W6LbnBigDe4ZG/200.gif" data-state="still" class="gif">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      console.log("Page Loaded");
+      createButtons(teams, 'searchButton', '#buttonDiv');
+    })
+
+    var teams = ["Oakland Athletics", "Texas Rangers", "New York Yankees"];
+
+    function createButtons(teams, classToAdd, areaToAddTo) {
+      $("#buttonDiv").empty();
+      
+      for (var i = 0; i < teams.length; i++) {
+        var a = $('<button>');
+        a.addClass(classToAdd);
+        a.attr('data-type', teams[i]);
+        a.text(teams[i]);
+        $(areaToAddTo).append(a);
+      }
+    }
+
+    $("#search-input").on("click", function (event) {
+      event.preventDefault();
+
+      var search = $("#search-input").val().trim();
+      teams.push(search);
+      createButtons();
+    });
+
+    createButtons();
+
+    $("button").on("click", ".searchButton", function () {
+      console.log("Gif clicked");
+      var team = $(this).attr("data-team");
+      var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
+        team + "&api_key=2hjfWdf4IISlCIf8QcbsTRS7bKQhkyb3&limit=10";
+      $("#gifs-appear-here").empty();
+      $.ajax({
+        url: queryURL,
+        method: "GET"
+      })
+        .then(function (response) {
+          console.log(response);
+
+          var results = response.data;
+
+          for (var i = 0; i < results.length; i++) {
+            var gifDiv = $("#<div>");
+            var p = $("<p>").text("Rating: " + results[i].rating);
+            var gifImage = $("<img>");
+            gifImage.attr("src", results[i].images.fixed_height.url);
+            gifDiv.prepend(p);
+            gifDiv.prepend(gifImage);
+            $("#")
+          }
+        });
+    });
+
+    $(".gif").on("click", function() {
+      var state = $(this).attr("data-state");
+
+      if (state == "still"){
+        $(this).attr("src", $(this).attr("data-animate"));
+        $(this).attr("data-state", "animate");
+      }
+      else {
+        $(this).attr("src", $(this).attr("data-still"));
+        $(this).attr("data-state", "still");
+      }
+    });
+
+
+  </script>
+</body>
+
+</html>
